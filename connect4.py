@@ -132,29 +132,6 @@ def get_game_input(window, board, agent, piece, heuristic_function, nn, depth):
         return move
 
 
-def heuristic_analyse_threats(board):
-    for r in range(board_height):
-        for c in range(board_width):
-            if board[board_height - r - 2][c] == 0 and board[board_height - r - 1][c] == 0:
-                new_board = board.copy()
-                if r % 2 == 1:  # odd row
-                    new_board[board_height - r - 1][r] = 1
-                    if is_win(new_board, 1):
-                        return 1000 * r
-                    new_board[board_height - r - 1][r] = -1
-                    if is_win(new_board, -1):
-                        return -10 * r
-                else:  # even row
-                    new_board[board_height - r - 1][r] = -1
-                    if is_win(new_board, -1):
-                        return -1000 * r
-                    new_board[board_height - r - 1][r] = 1
-                    if is_win(new_board, 1):
-                        return 10 * r
-    else:
-        return 0
-
-
 def heuristic_neural_network(board, neural_network):
     if isinstance(neural_network[0], list):
         length = len(neural_network)
@@ -168,9 +145,7 @@ def heuristic_neural_network(board, neural_network):
 
 def get_heuristic_function(board, heuristic_function, nn):
     score = 0
-    if heuristic_function == "threats":
-        score += heuristic_analyse_threats(board)
-    elif heuristic_function == "random":
+    if heuristic_function == "random":
         score += random.random()
     elif nn:
         score = heuristic_neural_network(board, nn)
