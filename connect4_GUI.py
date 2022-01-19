@@ -1,5 +1,6 @@
 import tkinter as tk
 import glob
+from pathlib import Path
 from connect4 import *
 
 beige_hex = "#fff1d0"
@@ -24,6 +25,16 @@ heuristics_options = {
     "random": "random"}
 for file in glob.glob("*.npy"):
     heuristics_options[file] = numpy.load(file, allow_pickle=True).tolist()
+
+if getattr(sys, "frozen", False):
+    folder = Path(sys._MEIPASS)
+else:
+    folder = Path(__file__).parent
+
+generation_file = folder/"final_generation.npy"
+heuristics_options["final_generation"] = numpy.load(generation_file, allow_pickle=True).tolist()
+network_file = folder/"final_neural_network.npy"
+heuristics_options["final_neural_network"] = numpy.load(network_file, allow_pickle=True).tolist()
 
 
 class PlayerSelection:
